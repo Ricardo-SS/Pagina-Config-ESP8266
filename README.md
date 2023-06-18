@@ -34,6 +34,13 @@ Essa pagina deverar esta hospedada em um servidor rodando dentro do ESP8266/ESP3
 - Nesse repositório ficará o codigo da pagina de servidor web
 O codigo completo com todas as funcionalidades ficaram em outro repositório por questoes de segurança.
 
+## Teste da pagina
+- Para visualizar a pagina em seu navegador basta clicar duas vezes sobre o index.html.
+- Dados de acesso podem ser alterados na parte do JS, esses dados são apenas para testes da pagina, para segurça deve ser usado uma outra forma de autenticação, como o autenticador do firebase ou outros metodos.
+
+      usuario: teste@email.com
+      senha: 123456"
+
 ### Objetivos
 - Criar uma pagina web que rode em uma placa NodeMCU/Esp8266.
 - Desenvolver tela de login
