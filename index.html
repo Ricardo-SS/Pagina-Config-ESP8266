@@ -45,3 +45,472 @@ O codigo completo com todas as funcionalidades ficaram em outro repositório
 - HTML 5
 - CSS 3
 - Javascript
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sys[MV] - Configurações</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: radial-gradient(circle, rgba(63, 251, 192, 1) 0%, rgba(70, 95, 252, 1) 100%);
+    }
+
+    /* estilo o logo */
+    .logo {
+      font-size: 2.4rem;
+      margin: 20px auto;
+      color: #000000;
+      text-align: center;
+    }
+
+    span::after {
+      content: "]";
+      color: #00ff08;
+    }
+
+    span::before {
+      content: "[";
+      color: #00ff08;
+    }
+
+    /* fim estilo o logo */
+    h2 {
+      text-align: center;
+      font-size: 1.3rem;
+      text-transform: uppercase;
+      color: #303030;
+      padding: 12px;
+    }
+
+    .localizacao {
+      margin: 0 auto;
+    }
+
+    #localizacao {
+      background: #303030;
+      display: flex;
+      align-items: center;
+      margin: 0 auto;
+    }
+
+    #pin {
+      width: 32px;
+      transition: 0.5s;
+    }
+
+    #pin:hover {
+      transform: scale(1.1);
+    }
+
+    .msg {
+      font-size: 0.8rem;
+      text-decoration: none;
+      text-align: right;
+    }
+
+    .conteinner,
+    .login {
+      text-align: left;
+      background-color: #d7e6d880;
+      padding: 0;
+      border: none;
+      border-radius: 8px;
+      width: 340px;
+      margin-bottom: 16px;
+    }
+
+    .formulario {
+      display: flex;
+      flex-direction: column;
+      width: 340px;
+      margin: 0 auto;
+      padding: 0.4rem 1rem;
+      background-color: #ffffff;
+      border-radius: 8px;
+      /* box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3); */
+      padding: 20px;
+      
+    }
+
+    label {
+      display: block;
+      margin-bottom: 2px;
+      font-size: 1em;
+      color: rgba(0, 0, 0, 0.65)
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      display: inline-block;
+      border: 1px solid #cccccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-size: 1em;
+      background-color: #ffffff;
+    }
+
+    input:focus {
+      border-color: #4CAF50;
+    }
+
+    .recuperar {
+      font-size: 0.8rem;
+      text-decoration: none;
+      text-align: right;
+      cursor: pointer;
+    }
+
+    button {
+      background-color: rgba(0, 210, 115);
+      box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      font-size: 1.2em;
+      color: #ffffff;
+      padding: 12px 22px;
+      margin-top: 22px;
+      border: none;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+
+    button:hover {
+      background-color: rgb(76, 175, 80);
+      transition: 0.3s;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+    }
+
+    #login-button {
+      margin-top: 32px;
+    }
+
+    #map {
+      height: 300px;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1 class="logo">Sys<span>MV</span></h1>
+  </header>
+
+
+  <!-- FORMULARIO DE LOGIN -->
+  <div class="login" id="login-form-container">
+    <h2>identificação</h2>
+    <form class="formulario" method="POST" id="login-form" action="/form">
+      <div class="form-elements-container">
+        <label for="input-email"><b>Email</b></label>
+        <input type="email" placeholder="exemplo@email.com" id="input-email" autocomplete="off" required>
+        <label for="input-password"><b>Senha</b></label>
+        <input type="password" placeholder="********" id="input-password" autocomplete="off" required>
+
+        <p class="recuperar"><a href="https://sysmv.web.app/suporte">Problemas para efetuar login?</a></p>
+
+        <button type="submit" id="login-button">Entrar</button>
+        <p id="error-message" style="color:red;"></p>
+      </div>
+    </form>
+  </div>
+  <!-- FORMULARIO DE MEDIDAS -->
+  <div class="conteinner" id="form" style="display: none;">
+    <h2>Preencha as medidas</h2>
+    <form class="formulario" method="POST" action="/form" id="measure-form">
+      <label for="formato">Formato</label>
+      <select id="formato" name="formato" required>
+        <option value="" selected disabled hidden>Selecione um formato aqui</option>
+        <option value="1">Cúbico/Retângular</option>
+        <option value="2">Cilindrico</option>
+        <option value="3">Caixa d'água/Cônica</option>
+      </select>
+
+      <!-- <label for="nome" id="nomeLabel" style="display: none;">Nome</label>
+      <input type="text" id="nome" placeholder="local de instalação" autocomplete="off" name="nome"
+        value="{nome}" style="display: none;" required> -->
+
+      <label for="comprimento" id="length" style="display: none;">Comprimento:</label>
+      <input type="number" id="comprimento" placeholder="Comprimento em cm" autocomplete="off" name="comprimento"
+        value="{comprimento}" style="display: none;" required>
+
+      <label for="largura" id="width" style="display: none;">Largura:</label>
+      <input type="number" id="largura" autocomplete="off" placeholder="Largura em cm" name="largura" value="{largura}"
+        required style="display: none;">
+
+      <label for="altura" id="LabelAjuste" style="display: none;">Altura:</label>
+      <input type="number" id="altura" autocomplete="off" placeholder="Altura em cm" name="altura" value="{altura}"
+        required style="display: none;">
+
+      <label for="diametro" id="diameter" style="display: none;">Diametro superior:</label>
+      <input type="number" id="diametro" autocomplete="off" placeholder="Diametro em cm" name="diametro"
+        value="{diametro}" required style="display: none;">
+
+      <label for="diametroBase" id="diametroBaseLabel" style="display: none;">Diametro da base:</label>
+      <input type="number" id="diametroBase" autocomplete="off" placeholder="Diametro da base em cm" name="diametroBase"
+        value="{diametroDaBase}" required style="display: none;">
+
+      <label for="ajuste" id="labelAltura" style="display: none;">Ajuste:</label>
+      <input type="number" id="ajuste" autocomplete="off" placeholder="Distancia do sensor até a água" name="ajuste"
+        value="{ajuste}" required style="display: none;">
+
+      <label for="local" id="labelLocal">Latitude e longitude</label>
+      <input type="text" id="local" name="local" autocomplete="none" placeholder="Clique no botão abaixo"
+        value="{localizacao}" required> <!-- função em teste -->
+
+      <!-- BOTAO OBTER LOCALIZACAO -->
+      <div class="localizacao">
+        <button id="localizacao" onclick="getLocation()">
+          <p id="pin">
+            <?xml version="1.0" ?><svg style="enable-background:new 0 0 512 512;" version="1.1" viewBox="0 0 512 512"
+              xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <g id="_x32_3_x2C__Location_x2C__map_x2C__pin_x2C__mark_x2C__navigation">
+                <g>
+                  <path
+                    d="M256,32.7c85.36,0,154.53,69.2,154.53,154.53c0,64-114.82,220.49-154.53,292.07    c-38.07-68.7-154.53-231.83-154.53-292.07C101.47,101.9,170.67,32.7,256,32.7z M325.07,181.41c0-38.03-31.02-69.05-69.07-69.05    c-38.02,0-69.04,31.02-69.04,69.05c0,38.02,31.02,69.04,69.04,69.04C294.05,250.45,325.07,219.43,325.07,181.41z"
+                    style="fill:#E74C3C;" />
+                  <path
+                    d="M256,489.3c-0.001,0-0.001,0-0.002,0c-3.635-0.001-6.982-1.974-8.745-5.153c-10.098-18.222-25.631-42.934-43.617-71.547    C153.663,333.102,91.47,234.162,91.47,187.23C91.47,96.508,165.278,22.7,256,22.7s164.53,73.808,164.53,164.53    c0,49.378-58.682,141.696-110.456,223.147c-17.792,27.99-34.597,54.428-45.33,73.774C262.981,487.328,259.634,489.3,256,489.3z     M256,42.7c-79.694,0-144.53,64.836-144.53,144.53c0,41.168,63.056,141.481,109.098,214.726    c13.602,21.64,25.813,41.065,35.442,57.316c10.349-17.405,23.477-38.059,37.186-59.625    C338.493,328.386,400.53,230.79,400.53,187.23C400.53,107.536,335.694,42.7,256,42.7z" />
+                  <path
+                    d="M256,260.45c-43.583,0-79.04-35.457-79.04-79.04c0-43.588,35.457-79.05,79.04-79.05c43.599,0,79.07,35.462,79.07,79.05    C335.07,224.993,299.599,260.45,256,260.45z M256,122.36c-32.555,0-59.04,26.49-59.04,59.05c0,32.555,26.485,59.04,59.04,59.04    c32.571,0,59.07-26.485,59.07-59.04C315.07,148.85,288.571,122.36,256,122.36z" />
+                </g>
+              </g>
+              <g id="Layer_1" />
+            </svg>
+          </p>
+          <p id="demo">Obter localização</p>
+        </button>
+        <p id="precisao" class="msg"></p>
+      </div>
+
+      <div id="salvar" style="display: none;">
+        <button type="submit">Salvar</button>
+      </div>
+
+    </form>
+  </div>
+  <div id="map"></div>
+
+  <!-- inicio do script - mostra os campos de input de acordo com o formato selecionado -->
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script>
+    const loginForm = document.querySelector('#login-form-container');
+    const formContainer = document.querySelector('#form');
+
+    const checkLogin = () => {
+      const usuario = "teste@email.com";
+      const senha = "123456";   // credenciaias somente para teste, devem ser substituidas pelas salvas em arquivo ou variaveis no servidor quado 
+
+      const inputUsuario = document.querySelector('#input-email').value;
+      const inputSenha = document.querySelector('#input-password').value;
+
+      if (inputUsuario === usuario && inputSenha === senha) {
+        loginForm.style.display = 'none';
+        formContainer.style.display = 'block';
+        console.log('Usuário logado:', inputUsuario);
+      } else {
+        loginForm.style.display = 'block';
+        formContainer.style.display = 'none';
+      }
+    }
+
+    loginForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      checkLogin();
+    });
+    // FIM DO LOGIN
+    // Obtém o select de formato e os inputs de largura, comprimento e diâmetro
+    const formatoSelect = document.getElementById("formato");
+    const comprimentoInput = document.getElementById("comprimento");
+    const larguraInput = document.getElementById("largura");
+    const alturaInput = document.getElementById("altura");
+    const ajusteInput = document.getElementById("ajuste");
+    const diametro1Input = document.getElementById("diametro");
+    const diametroBaseInput = document.getElementById("diametroBase");
+    const larguraLabel = document.getElementById("width");
+    const comprimentoLabel = document.getElementById("length");
+    const diametroLabel = document.getElementById("diameter");
+    const diametroBaseLabel = document.getElementById("diametroBaseLabel");
+    const alturaLabel = document.getElementById("labelAltura");
+    const ajusteLabel = document.getElementById("LabelAjuste");
+
+    const localizacaoBotao = document.getElementById("localizacao");
+    const localMap = document.getElementById("map");
+
+    const nomeLabel = document.getElementById("nomeLabel");
+    const nomeInput = document.getElementById("nome");
+
+    const salvarBotao = document.getElementById("salvar");
+
+    //Obtém os inputs para definir se são requeridos ou não
+    const requeridoComprimento = document.querySelector("#comprimento");
+    const requeridoLargura = document.querySelector("#largura");
+    const requeridoDiametro = document.querySelector("#diametro");
+    const requeridoDiametroBase = document.querySelector("#diametroBase");
+
+    // Adiciona um event listener ao select para detectar a seleção do usuário
+    formatoSelect.addEventListener("change", function () {
+      alturaInput.style.display = "block";
+      alturaLabel.style.display = "block";
+      ajusteInput.style.display = "block";
+      ajusteLabel.style.display = "block";
+
+      // desabilta o botao localização.
+      if (formatoSelect.value !== "") {
+        localizacaoBotao.style.display = "none";
+        localMap.style.display = "none";
+        msgPrecisao.style.display = "none";
+        salvarBotao.style.display = "block";
+      } 
+      else if (formatoSelect.value === "") {
+        salvarBotao.style.display = "none";
+      }
+
+      // Verifica se o formato selecionado é retângulo
+      if (formatoSelect.value === "1") {
+        // Desabilita o requerimento do input diâmetro
+        requeridoDiametro.disabled = true;
+        requeridoDiametroBase.disabled = true;
+
+        // Reabilita o requerimento dos inputs comprimento e largura
+        requeridoLargura.disabled = false;
+        requeridoComprimento.disabled = false;
+
+        // Oculta o input de diâmetro
+        diametro1Input.style.display = "none";
+        diametroLabel.style.display = "none";
+        diametroBaseInput.style.display = "none";
+        diametroBaseLabel.style.display = "none";
+
+        // Exibe os inputs de largura e comprimento
+        larguraInput.style.display = "block";
+        comprimentoInput.style.display = "block";
+        larguraLabel.style.display = "block";
+        comprimentoLabel.style.display = "block";
+
+      } else if (formatoSelect.value === "2") {
+        // Desabilita o requerimento dos inputs comprimento e largura
+        requeridoLargura.disabled = true;
+        requeridoComprimento.disabled = true;
+        requeridoDiametroBase.disabled = true;
+
+        // Reabilita o requerimento do input diâmetro
+        requeridoDiametro.disabled = false;
+
+        // Oculta os inputs de largura e comprimento
+        larguraInput.style.display = "none";
+        comprimentoInput.style.display = "none";
+        larguraLabel.style.display = "none";
+        comprimentoLabel.style.display = "none";
+        diametroBaseInput.style.display = "none";
+        diametroBaseLabel.style.display = "none";
+
+        // Exibe o input de diâmetro
+        diametro1Input.style.display = "block";
+        diametroLabel.style.display = "block";
+
+      } else if (formatoSelect.value === "3") {
+        // Desabilita o requerimento dos inputs comprimento e largura
+        requeridoLargura.disabled = true;
+        requeridoComprimento.disabled = true;
+
+        // Reabilita o requerimento do input diâmetro
+        requeridoDiametro.disabled = false;
+        requeridoDiametroBase.disabled = false;
+
+        // Oculta os inputs de largura e comprimento
+        larguraInput.style.display = "none";
+        comprimentoInput.style.display = "none";
+        larguraLabel.style.display = "none";
+        comprimentoLabel.style.display = "none";
+
+        // Exibe o input de diâmetro
+        diametro1Input.style.display = "block";
+        diametroLabel.style.display = "block";
+        diametroBaseInput.style.display = "block";
+        diametroBaseLabel.style.display = "block";
+      }
+    });
+
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition, showError);
+      } else {
+        alert("Geolocalização não é suportada pelo seu navegador.");
+      }
+    }
+
+    var msgPrecisao = document.getElementById("precisao");
+    function showPosition(position) {
+      var latitude = position.coords.latitude;
+      var longitude = position.coords.longitude;
+      var altitude = position.coords.altitude;
+      var accuracy = position.coords.accuracy;
+
+      let local = position.coords.latitude + ", " + position.coords.longitude;
+      document.getElementById("local").value = local;
+      msgPrecisao.innerHTML = "Precisão: " + position.coords.accuracy + " metros. " + "Altitude: " + altitude + "<br>Precisão ideal menor que 100 metros.";
+      console.log(local); //apenas pera ver no console.
+
+      document.getElementById("demo").innerHTML = "Atualizar localização";
+      //document.getElementById("altitude").innerHTML = "Altitude: " + altitude;
+      // document.getElementById("accuracy").innerHTML = "Precisão: " + accuracy + " metros";
+
+      showMap(latitude, longitude);
+    }
+
+    function showError(error) {
+      switch (error.code) {
+        case error.PERMISSION_DENIED:
+          alert("Permissão de localização negada pelo usuário.");
+          break;
+        case error.POSITION_UNAVAILABLE:
+          alert("Informações de localização não disponíveis.");
+          break;
+        case error.TIMEOUT:
+          alert("A solicitação para obter a localização do usuário expirou.");
+          break;
+        case error.UNKNOWN_ERROR:
+          alert("Ocorreu um erro desconhecido.");
+          break;
+      }
+    }
+
+    function showMap(latitude, longitude) {
+      var map = L.map('map').setView([latitude, longitude], 12);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+        maxZoom: 18,
+      }).addTo(map);
+
+      L.marker([latitude, longitude]).addTo(map);
+    }
+
+    document.getElementById("demo").addEventListener("click", function (event) {
+      event.preventDefault()
+    });
+
+    // Chamada para obter a localização ao carregar a página
+    getLocation();
+  </script>
+  <!-- fim do script -->
+</body>
+
+</html>
