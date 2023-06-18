@@ -2,6 +2,9 @@
 Pagina de configuração que está sendo desenvolvida para um projeto com um esp8266, nessa pagina é possível configura as medidas de vários reservatórios além de pegar a localização baseado no Wi-Fi ou gps do dispositivo que esta acessado a pagina.
 Essa pagina deverar esta hospedada em um servidor rodando dentro do ESP8266/ESP32.
 
+## Explicação dobre o index
+- No index.html estão a parte HTML, CSS e JavaScrip no mesmo arquivo, isso se deve ao fato de que no ESP8266 esse arquivo tem que ser passado todo de uma vez, por esse motivo, o arquivo teve que ser unificado.
+
 # Servidor Web ESP8266
 
 <p align="center">
@@ -12,10 +15,11 @@ Essa pagina deverar esta hospedada em um servidor rodando dentro do ESP8266/ESP3
 
 ## Capturas de tela
 <p align="center">
-    <img src="img/mobile.gif" width="200" />
-    <img src="img/home.png" width="200" />
-    <img src="img/cúbico.png" width="200" />
-    <img src="img/cilindrico.png" width="200" />
+    <img src="img/mobile.png" width="800" />
+    <img src="img/mobile%20(3).png" width="200" />
+    <img src="img/mobile%20(6).png" width="200" />
+    <img src="img/mobile%20(7).png" width="200" />
+    <img src="img/mobile%20(8).png" width="200" />
 </p>
 
 <hr>
